@@ -365,6 +365,10 @@ class _LDAPUser(object):
             sticky = self.settings.BIND_AS_AUTHENTICATING_USER
 
             self._bind_as(self.dn, password, sticky=sticky)
+            
+            if sticky and self.settings.AUTH_LDAP_USER_SEARCH:
+                self._search_for_user_dn()
+                
         except self.ldap.INVALID_CREDENTIALS:
             raise self.AuthenticationFailed("User DN/password rejected by LDAP server.")
 
@@ -472,7 +476,6 @@ class _LDAPUser(object):
 
         if should_populate:
             logger.debug("Populating Django user %s", username)
-            self._search_for_user_dn()
             self._populate_user()
             save_user = True
 
