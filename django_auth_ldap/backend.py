@@ -472,6 +472,7 @@ class _LDAPUser(object):
 
         if should_populate:
             logger.debug("Populating Django user %s", username)
+            self._search_for_user_dn()
             self._populate_user()
             save_user = True
 
